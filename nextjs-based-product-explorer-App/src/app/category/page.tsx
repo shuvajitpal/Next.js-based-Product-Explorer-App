@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import SearchBar from "@/components/SearchBar";
 import CategoryFilter from "@/components/CategoryFilter";
@@ -20,7 +20,7 @@ interface Product {
     availabilityStatus: string;
 }
 
-const CategoryPage = () => {
+const CategoryPageContent = () => {
     const params = useSearchParams();
     const category = params.get("name")?.toLowerCase() || "";
     const [products, setProducts] = useState<Product[]>([]);
@@ -93,5 +93,24 @@ const CategoryPage = () => {
         </div>
     );
 };
+
+const CategoryPage = () => {
+    return (
+        <Suspense fallback={
+            <div className="loading">
+                <Image
+                    src={"/loading.png"}
+                    alt="App Logo"
+                    width={100}
+                    height={100}
+                />
+                Loading...
+            </div>
+        }>
+            <CategoryPageContent />
+        </Suspense>
+    );
+};
+
 
 export default CategoryPage;
